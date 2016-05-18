@@ -6,6 +6,8 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
     var carregarContatos = function () {
         contatosAPI.getContatos().success(function (data, status) {
             $scope.contatos = data;
+        }).error(function() {
+            $scope.error = "Não foi possível carregar os dados";
         });
     };
 
@@ -25,7 +27,7 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
             $scope.contatoForm.$setPristine();
             carregarContatos();
         }).error(function (data) {
-            $scope.message = "Ocorreu um problema ao gravar o contato: " + data;
+            $scope.error = "Ocorreu um problema ao gravar o contato: " + data;
         });
 
     };
