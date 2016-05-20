@@ -1,22 +1,12 @@
 angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($scope, contatosAPI, operadorasAPI, serialGenerator, $filter, uppercaseFilter) {
     $scope.app = "Lista telefônica";
     $scope.contatos = [];
-    $scope.operadoras = [];
-    $scope.contato = {
-        data: new Date().getTime()
-    };
 
     var carregarContatos = function () {
         contatosAPI.getContatos().success(function (data, status) {
             $scope.contatos = data;
         }).error(function() {
             $scope.error = "Não foi possível carregar os dados";
-        });
-    };
-
-    var carregarOperadoras = function () {
-        operadorasAPI.getOperadoras().success(function (data, status) {
-            $scope.operadoras = data;
         });
     };
 
@@ -53,7 +43,6 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
     };
 
     carregarContatos();
-    carregarOperadoras();
 
     $scope.classe = "selecionado";
 });

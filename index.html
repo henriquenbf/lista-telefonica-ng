@@ -6,17 +6,21 @@
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="css/app.css" />
     <link rel="stylesheet" type="text/css" href="css/ui.css" />
-    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular/angular-route.min.js"></script>
     <script src="lib/angular/angular-locale_pt-br.js"></script>
     <script src="lib/angular/angular-messages.min.js"></script>
     <script src="lib/serialGenerator/serialGenerator.js"></script>
     <script src="lib/uiAccordion/uiAccordion.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers/listaTelefonicaCtrl.js"></script>
+    <script src="js/controllers/novoContatoCtrl.js"></script>
+    <script src="js/controllers/detalhesContatoCtrl.js"></script>
     <script src="js/services/contatosAPIService.js"></script>
     <script src="js/services/operadorasAPIService.js"></script>
     <script src="js/constants/configValue.js"></script>
     <script src="js/config/serialGeneratorConfig.js"></script>
+    <script src="js/config/routeConfig.js"></script>
     <script src="js/filters/nameFilter.js"></script>
     <script src="js/filters/elipsisFilter.js"></script>
     <script src="js/directives/uiAlertDirective.js"></script>
@@ -24,90 +28,9 @@
     <script src="js/directives/uiCpfDirective.js"></script>
 </head>
 
-<body ng-controller="listaTelefonicaCtrl">
-
-    <div class="jumbotron">
-        <h3>{{app}}</h3>
-        
-        <ui-alert ng-show="error" title="Ops, ocorreu um problema!" >
-            {{error}}
-        </ui-alert>
-        
-        <ui-accordions>
-            <ui-accordion title="Accordion 1">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </ui-accordion>
-
-            <ui-accordion title="Accordion 2">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </ui-accordion>
-            
-            <ui-accordion title="Accordion 3">
-                Ahsduhsaduahd saudhahfasowerjw yrkdbvkd vna vbwayu vywu efyw fvywvfyerv erv eyrvg eyurv yuer ve egr ev reg ver fgwietjq wietj qweriuewqioruwqiru qwiruewqr ewqoiruqwoir uqewoir uqweiorqwopir.
-            </ui-accordion>
-        </ui-accordions>
-        
-        <input class="form-control" type="text" ng-model="criterioDeBusca" placeholder="Digite um nome para pesquisar" />
-
-        <table class="table" ng-show="contatos.length > 0">
-            <tr>
-                <th></th>
-                <th>Serial</th>
-                <th><a href="" ng-click="ordenarPor('nome')" />Nome</th>
-                <th><a href="" ng-click="ordenarPor('telefone')" />Telefone</th>
-                <th>CPF</th>
-                <th>Operadora</th>
-                <th>Data</th>
-                <th></th>
-            </tr>
-            <tr ng-class="{selecionado: contato.selecionado}" ng-repeat="contato in contatos | filter:{nome: criterioDeBusca} | orderBy:criterioDeOrdenacao:direcaoDaOrdenacao ">
-                <!-- td ng-repeat="(key,value) in contato" >
-					{{value}}
-				</td -->
-                <td><input type="checkbox" ng-model="contato.selecionado" /></td>
-                <td>{{contato.serial}}</td>
-                <td>{{contato.nome | name | elipsis:12}}</td>
-                <td>{{contato.telefone}}</td>
-                <td>{{contato.cpf}}</td>
-                <td>{{contato.operadora.nome}}</td>
-                <td>{{contato.data | date:'dd/MM/yyyy HH:mm'}}</td>
-                <td>
-                    <div style="width: 20px; height: 20px;" ng-style="{'background-color': contato.cor}" />
-                </td>
-            </tr>
-        </table>
-
-        <hr />
-
-        <form name="contatoForm">
-            <input class="form-control" type="text" ng-model="contato.nome" name="nome" ng-required="true" ng-minLength="3" placeholder="Nome" />
-            <input class="form-control" type="text" ng-model="contato.telefone" name="telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/" placeholder="Telefone" />
-            <input class="form-control" type="text" ng-model="contato.cpf" name="cpf" ui-cpf ng-required="true" ng-minlength="14" ng-maxlength="14" placeholder="CPF" />
-            <input class="form-control" type="text" ng-model="contato.data" name="data" placeholder="Data" ui-date />
-            <select class="form-control" ng-model="contato.operadora" ng-required="true" ng-options="operadora.nome + ' (' + (operadora.preco | currency) + ')' group by operadora.categoria for operadora in operadoras | orderBy:'nome'">
-                <option value="">Selecione uma Operadora</option>
-            </select>
-        </form>
-
-        <div ng-messages="contatoForm.nome.$error" class="alert alert-danger">
-            <div ng-message="required">
-                Preencha o campo nome
-            </div>
-            <div ng-message="minlength">
-                O campo nome deve ter no mínimo 3 caracteres
-            </div>
-        </div>
-
-        <div class="alert alert-danger" ng-show="contatoForm.telefone.$error.required && contatoForm.telefone.$dirty">
-            Preencha o campo telefone
-        </div>
-        <div class="alert alert-danger" ng-show="contatoForm.telefone.$error.pattern">
-            O campo telefone deve ter o formato 99999-9999
-        </div>
-
-        <button class="btn btn-primary" ng-click="adicionarContato(contato)" ng-disabled="contatoForm.$invalid">Adicionar Contato</button>
-        <button class="btn btn-danger" ng-click="apagarContatos(contatos)" ng-show="isAlgumContatoSelecionado(contatos)">Apagar Contatos</button>
-    </div>
+<body>
+    
+    <div ng-view></div>
     <div ng-include="'view/footer.html'" />
 
 </body>
