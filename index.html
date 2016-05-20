@@ -19,6 +19,7 @@
     <script src="js/filters/nameFilter.js"></script>
     <script src="js/filters/elipsisFilter.js"></script>
     <script src="js/directives/uiAlertDirective.js"></script>
+    <script src="js/directives/uiDateDirective.js"></script>
     
 </head>
 
@@ -27,7 +28,7 @@
     <div class="jumbotron">
         <h3>{{app}}</h3>
         
-        <ui-alert title="Ops, ocorreu um problema!" >
+        <ui-alert ng-show="error" title="Ops, ocorreu um problema!" >
             {{error}}
         </ui-alert>
         
@@ -64,6 +65,8 @@
         <form name="contatoForm">
             <input class="form-control" type="text" ng-model="contato.nome" name="nome" ng-required="true" ng-minLength="3" placeholder="Nome" />
             <input class="form-control" type="text" ng-model="contato.telefone" name="telefone" ng-required="true" ng-pattern="/^\d{4,5}-\d{4}$/" placeholder="Telefone" />
+            {{contato.data}}
+            <input class="form-control" type="text" ng-model="contato.data" name="data" placeholder="Data" ui-date />
             <select class="form-control" ng-model="contato.operadora" ng-required="true" ng-options="operadora.nome + ' (' + (operadora.preco | currency) + ')' group by operadora.categoria for operadora in operadoras | orderBy:'nome'">
                 <option value="">Selecione uma Operadora</option>
             </select>

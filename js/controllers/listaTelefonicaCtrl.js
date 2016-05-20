@@ -2,6 +2,9 @@ angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function ($s
     $scope.app = "Lista telefônica";
     $scope.contatos = [];
     $scope.operadoras = [];
+    $scope.contato = {
+        data: new Date().getTime()
+    };
 
     var carregarContatos = function () {
         contatosAPI.getContatos().success(function (data, status) {
